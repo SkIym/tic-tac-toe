@@ -33,7 +33,7 @@ const Gameboard = (() => {
         gameGrid.appendChild(gameTile)
       }
     }
-    if(!gameRunning){
+    if(!gameRunning || (gameRunning && placedTiles > 0)){
       _clearBoard()
     }
   };
@@ -60,8 +60,9 @@ const Player = (name, mark) => {
   }
 }
 
-const player1 = Player("1","X");
-const player2 = Player("2","O");
+
+const player1 = Player(1,"X");
+const player2 = Player(2,"O");
 
 const Gameflow = (() => {
 
@@ -132,6 +133,7 @@ const Gameflow = (() => {
 
 
   const startGame = () => {
+    _getPlayerNames();
     _randomizeTurn();
     _updateTurn(activePlayer);
     Gameboard.renderBoard(true);
@@ -143,6 +145,13 @@ const Gameflow = (() => {
     turn =  randomizer > 50 ? true: false;
     activePlayer = randomizer > 50 ? player1: player2;
     nextPlayer = randomizer > 50 ? player2: player1;
+  }
+
+  const _getPlayerNames = () => {
+    const player1Name = document.getElementById("player-one").value;
+    const player2Name = document.getElementById("player-two").value;
+    player1.name = player1Name != "" ? player1Name: player1.name;
+    player2.name = player2Name != "" ? player2Name: player2.name;
   }
 
   return {
