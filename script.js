@@ -11,6 +11,7 @@ const Gameboard = (() => {
     if (tile.textContent === "") {
       let mark = Gameflow.playRound();
       tile.textContent = mark;
+      tile.classList.add("marked-tile");
       gameboard[row][col] = mark;
       placedTiles++;
       Gameflow.checkTiles(gameboard, row, col, placedTiles);
@@ -41,6 +42,8 @@ const Gameboard = (() => {
   const _clearBoard = () => {
     Array.from(gameGrid.childNodes).forEach((tile)=> {
       tile.setAttribute("disabled", "");
+      tile.classList.remove("marked-tile");
+      tile.classList.add("finished-tile");
       placedTiles = 0;
       gameboard = [["","",""],["","",""],["","",""]];
     })
@@ -61,8 +64,8 @@ const Player = (name, mark) => {
 }
 
 
-const player1 = Player(1,"X");
-const player2 = Player(2,"O");
+const player1 = Player("Player 1","X");
+const player2 = Player("Player 2","O");
 
 const Gameflow = (() => {
 
@@ -91,6 +94,7 @@ const Gameflow = (() => {
 
   const _gameOver = (display) => {
     turnDisplay.textContent = display;
+    turnDisplay.style.color = "#FFBE0B";
     Gameboard.renderBoard(false);
   }
 
@@ -115,13 +119,13 @@ const Gameflow = (() => {
 
     // all tiles are occupied with no winner
     if(patternExists){
-      _gameOver(`${activePlayer.name} wins`);
+      _gameOver(`${activePlayer.name} wins!`);
 
     }
     else {
       // tie
       if (placedTiles == 9) {
-        _gameOver("Tie");
+        _gameOver("Tie :3");
       }
       // continue
       else {
@@ -138,6 +142,7 @@ const Gameflow = (() => {
     _updateTurn(activePlayer);
     Gameboard.renderBoard(true);
     restartGameButton.textContent = "RESTART";
+    turnDisplay.style.color = "white";
   };
 
   const _randomizeTurn = () => {

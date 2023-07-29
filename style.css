@@ -1,6 +1,7 @@
 * {
   margin: 0;
   outline: none;
+  font-family: 'Didact Gothic', sans-serif;
 }
 
 .grid-container {
@@ -16,6 +17,24 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  height: 100vh;
+  background-image: linear-gradient(45deg,#ff2583, #975cea, #5596ff);
+}
+
+/* game-display */
+h1 {
+  font-size: 2.5rem;
+  text-align: end;
+}
+
+#game-details-display {
+  display: inline-block;
+  color: white;
+}
+
+h2 {
+  margin-top: -10px;
+  text-align: center;
 }
 
 /* game grid */
@@ -23,7 +42,78 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 4rem;
+  font-size: 4.5rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #FFBE0B;
+  transition: 0.2s ease-in-out;
+  color: #483500;
 }
 
+.marked-tile {
+  background-color: #ffcf4c;
+}
 
+.finished-tile {
+  background-color: #fffbf1;
+  color: #ffe6b5;
+  pointer-events: none;
+  border: 1px solid #fff3d2;
+}
+
+.game-tile:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+#game-grid {
+  gap: 13px;
+  padding: 13px;
+  background-color: white;
+  /* background-image: linear-gradient(235deg,#FF006E, #8338EC, #3A86FF); */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+/* name inputs */
+
+#name-inputs {
+  gap: 100px;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid rgb(195, 195, 195);
+  letter-spacing: 0.15rem;
+  padding: 5px 20px;
+  transition: 0.2s ease-in-out;
+  border-radius: 2px;
+}
+
+input:focus {
+  border-bottom: 1px solid #fff6dc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #fffbf1;
+}
+
+input::placeholder {
+  text-align: center;
+}
+
+#start-game {
+  background-color: #FFBE0B;
+  border: 1px solid #FFBE0B;
+  padding: 10px 20px;
+  transition: 0.1s ease-in-out;
+  font-weight: bolder;
+}
+
+#start-game:hover {
+  cursor: pointer;
+  border-bottom: 5px solid #c8960b;
+}
+
+#start-game:active {
+  transform: scale(0.97);
+}

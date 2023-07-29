@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+  </style>
   <title>Play tic-tac-toe!</title>
 </head>
 <body>
   <main>
-    <h1>tic-tac-toe</h1>
     <div id="game-details-display" class="flex-container">
-      <h2 id="turn-display">Press START GAME</h2>
+      <h1>tic-tac-toe</h1>
+      <h2 id="turn-display">press start game</h2>
     </div>
     <div id="game-grid" class="grid-container">
     </div>
-    <div>
-      <form action="">
-        <input type="text" placeholder="Player 1 Name" name="player-one" id="player-one">
-        <input type="text" placeholder="Player 2 Name" name="player-two" id="player-two">
-      </form>
+    <div id="name-inputs" class="flex-container">
+      <input type="text" placeholder="Player 1" name="player-one" id="player-one">
+      <input type="text" placeholder="Player 2" name="player-two" id="player-two">
     </div>
     <button id="start-game">START GAME</button>
   </main>
