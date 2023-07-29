@@ -1,42 +1,50 @@
+const restartGameButton = document.getElementById("start-game");
 
 const Gameboard = (() => {
 
   let boardSize = "150px";
-  let gameboard = [["X","O","X"],["O","O","X"],["X","X","O"]];
-  gameboard = [["","",""],["","",""],["","",""]];
+  let gameboard = [["","",""],["","",""],["","",""]];
+  let placedTiles = 0;
+  const gameGrid = document.getElementById("game-grid");
 
   const _editBoard = (tile, row, col) => {
-    let mark = Gameflow.playRound();
-    tile.textContent = mark;
-    gameboard[row][col] = mark;
-    Gameflow.checkTiles(gameboard, row, col);
+    if (tile.textContent === "") {
+      let mark = Gameflow.playRound();
+      tile.textContent = mark;
+      gameboard[row][col] = mark;
+      placedTiles++;
+      Gameflow.checkTiles(gameboard, row, col, placedTiles);
+    }
   };
 
-  const renderBoard = () => {
+  const renderBoard = (gameRunning) => {
 
-    const gameGrid = document.getElementById("game-grid");
+    gameGrid.innerHTML = "";
     gameGrid.style.gridTemplateColumns = `repeat(3, ${boardSize})`;
     gameGrid.style.gridTemplateRows = `repeat(3, ${boardSize})`;
-
+    
     for (let row = 1; row < 4; row++){
       for (let col = 1; col < 4; col++){
         const gameTile = document.createElement("button");
         gameTile.id = `tile-${row}-${col}`;
         gameTile.classList.add("game-tile");
         gameTile.textContent = gameboard[row-1][col-1];
-        gameTile.addEventListener("click", (e) => {
-
-          let targetTile = e.target;
-          if (targetTile.textContent === ""){
-            _editBoard(targetTile, row-1, col-1)
-          } 
-
-        });  
+        gameTile.addEventListener("click", (e) => _editBoard(e.target, row-1, col-1));
         gameGrid.appendChild(gameTile)
       }
     }
+    if(!gameRunning){
+      _clearBoard()
+    }
   };
 
+  const _clearBoard = (gameFinish) => {
+    Array.from(gameGrid.childNodes).forEach((tile)=> {
+      tile.setAttribute("disabled", "");
+      placedTiles = 0;
+      gameboard = [["","",""],["","",""],["","",""]];
+    })
+  }
 
   return {
     renderBoard,
@@ -45,44 +53,91 @@ const Gameboard = (() => {
 
 })();
 
-const Player = (number, mark) => {
+const Player = (name, mark) => {
   return {
-    number,
+    name,
     mark
   }
 }
 
-const player1 = Player(1,"X");
-const player2 = Player(2,"O");
+const player1 = Player("1","X");
+const player2 = Player("2","O");
 
 const Gameflow = (() => {
 
-  const startGameButton = document.getElementById("start-game");
   let turn = true;
-  let mark = player1.mark;
+  let activePlayer = player1;
+  let nextPlayer = player2;
+  const turnDisplay = document.getElementById("turn-display");
 
   const playRound = () => {
     if (turn) {
-      mark = player1.mark;
+      activePlayer = player1;
+      nextPlayer = player2;
       turn = false;
     }
     else {
-      mark = player2.mark;
+      activePlayer = player2;
+      nextPlayer = player1;
       turn = true;
     }
-    return mark
+    return activePlayer.mark
   }
 
-  // const checkTiles = (board, row, col) => {
-  //   for(let x = -1; x <= 1; x++){
-  //     for(let y = -1; y <= 1; y++)
+  const _updateTurn = (player) => {
+    turnDisplay.textContent = `${player.name}'s turn (${player.mark})`;
+  }
 
-  //   }
-  // };
+  const _gameOver = (display) => {
+    turnDisplay.textContent = display;
+    Gameboard.renderBoard(false);
+  }
+
+  const checkTiles = (board, markedRow, markedCol, placedTiles) => {
+
+    let winningPattern = [activePlayer.mark, activePlayer.mark, activePlayer.mark];
+    let patterns = [board[markedRow], [board[0][markedCol], board[1][markedCol], board[2][markedCol]], [board[0][0], board[1][1], board[2][2]], [board[0][2], board[1][1], board[2][0]]];
+
+    let patternExists = patterns.some(pattern => {
+        
+      let i = 0;
+      let patternDetected = true;
+
+      pattern.forEach(tile => {
+        if (tile !== winningPattern[i]){
+          patternDetected = false;
+          return
+        }
+      });
+      return patternDetected
+    });
+
+    // all tiles are occupied with no winner
+    if(patternExists){
+      _gameOver(`${activePlayer.name} wins`);
+
+    }
+    else {
+      // tie
+      if (placedTiles == 9) {
+        _gameOver("Tie");
+      }
+      // continue
+      else {
+        _updateTurn(nextPlayer);
+      }
+      
+    }
+  };
 
 
   const startGame = () => {
-    Gameboard.renderBoard();
+    turn = true;
+    activePlayer = player1;
+    nextPlayer = player2;
+    _updateTurn(activePlayer);
+    Gameboard.renderBoard(true);
+    restartGameButton.textContent = "RESTART";
   };
 
   return {
@@ -93,4 +148,9 @@ const Gameflow = (() => {
 
 })();
 
-Gameflow.startGame();
+
+restartGameButton.addEventListener("click", Gameflow.startGame)
+
+window.onload = () => {
+  Gameboard.renderBoard(false);
+}

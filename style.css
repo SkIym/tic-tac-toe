@@ -7,6 +7,10 @@
   display: grid;
 }
 
+.flex-container {
+  display: flex;
+}
+
 main {
   display: flex;
   flex-direction: column;
