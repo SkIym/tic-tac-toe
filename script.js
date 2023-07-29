@@ -20,8 +20,8 @@ const Gameboard = (() => {
   const renderBoard = (gameRunning) => {
 
     gameGrid.innerHTML = "";
-    gameGrid.style.gridTemplateColumns = `repeat(3, ${boardSize})`;
-    gameGrid.style.gridTemplateRows = `repeat(3, ${boardSize})`;
+    gameGrid.style.gridTemplateColumns = `repeat(3, min(30vw,${boardSize}))`;
+    gameGrid.style.gridTemplateRows = `repeat(3, min(30vw,${boardSize}))`;
     
     for (let row = 1; row < 4; row++){
       for (let col = 1; col < 4; col++){
@@ -38,7 +38,7 @@ const Gameboard = (() => {
     }
   };
 
-  const _clearBoard = (gameFinish) => {
+  const _clearBoard = () => {
     Array.from(gameGrid.childNodes).forEach((tile)=> {
       tile.setAttribute("disabled", "");
       placedTiles = 0;
@@ -132,13 +132,18 @@ const Gameflow = (() => {
 
 
   const startGame = () => {
-    turn = true;
-    activePlayer = player1;
-    nextPlayer = player2;
+    _randomizeTurn();
     _updateTurn(activePlayer);
     Gameboard.renderBoard(true);
     restartGameButton.textContent = "RESTART";
   };
+
+  const _randomizeTurn = () => {
+    const randomizer = Math.round(Math.random() * 101);
+    turn =  randomizer > 50 ? true: false;
+    activePlayer = randomizer > 50 ? player1: player2;
+    nextPlayer = randomizer > 50 ? player2: player1;
+  }
 
   return {
     startGame,
